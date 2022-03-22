@@ -16,8 +16,8 @@ module Notion
         # database properties and can be combined. The order of the sorts in the request
         # matter, with earlier sorts taking precedence over later ones.
         #
-        # @option options [id] :database_id
-        #   Database to query.
+        # @param [String] id 
+        #   ID for Database
         #
         # @option options [Object] :filter
         #   When supplied, limits which pages are returned based on the provided criteria.
@@ -33,14 +33,13 @@ module Notion
         #
         # @option options [integer] :page_size
         #   The number of items from the full list desired in the response. Maximum: 100
-        def database_query(options = {})
-          throw ArgumentError.new('Required arguments :database_id missing') if options[:database_id].nil?
+        def database_query(id, options = {})
           if block_given?
             Pagination::Cursor.new(self, :database_query, options).each do |page|
               yield page
             end
           else
-            post("databases/#{options[:database_id]}/query", options.except(:database_id))
+            post("databases/#{id}/query", options)
           end
         end
 
