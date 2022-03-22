@@ -82,14 +82,13 @@ module Notion
         #
         # Returns a 400 or 429 HTTP response if the request exceeds Notion's Request limits.
         #
-        # @option options [id] :block_id
-        #   Block to append children to.
+        # @param [String] id 
+        #   Identifier for a block - A block object represents content within Notion. Blocks can be text, lists, media, and more. A page is a type of block, too!
         #
         # @option options [[Object]] :children
         #   Children blocks to append
-        def block_append_children(options = {})
-          throw ArgumentError.new('Required arguments :block_id missing') if options[:block_id].nil?
-          patch("blocks/#{options[:block_id]}/children", options.except(:block_id))
+        def block_append_children(id, options = {})
+          patch("blocks/#{id}/children", options)
         end
       end
     end

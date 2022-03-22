@@ -20,25 +20,27 @@ module Notion
         end
 
         #
-        # Creates a new page in the specified database.
-        # Later iterations of the API will support creating pages outside databases.
-        # Note that this iteration of the API will only expose page properties, not
-        # page content, as described in the data model.
+        # Creates a new page in the specified database or as a child of an existing page.
+        # If the parent is a database, the property values of the new page in the properties parameter must conform to the parent database's property schema.
+        # If the parent is a page, the only valid property is title.
+        # The new page may include page content, described as blocks in the children parameter.
         #
         # @option options [Object] :parent
-        #   Parent of the page, which is always going to be a database in this version of the API.
+        #   A database parent or page parent
         #
         # @option options [Object] :properties
-        #   Properties of this page.
-        #   The schema for the page's keys and values is described by the properties of
-        #   the database this page belongs to. key string Name of a property as it
-        #   appears in Notion, or property ID. value object Object containing a value
-        #   specific to the property type, e.g. {"checkbox": true}.
+        #   Property values of this page. The keys are the names or IDs of the property and the values are property values.
         #
-        # @option options [Object] :children
-        #   An optional array of Block objects representing the Page’s content
+        # @option options [Array] :children
+        #   Page content for the new page as an array of block objects
+        #
+        # @option options [Object] :icon
+        #   Page icon for the new page.
+        #
+        # @option options [Object] :cover
+        #   Page cover for the new page
         def create_page(options = {})
-          throw ArgumentError.new('Required argument :parent.database_id missing') if options.dig(:parent, :database_id).nil?
+          throw ArgumentError.new('Required argument :parent.database_id missing') if options.dig(:parent, :database_id).nil? && options.dig(:parent, :page_id).nil?
           post("pages", options)
         end
 
